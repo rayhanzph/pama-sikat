@@ -1,0 +1,7 @@
+{
+  "name": "Lapor PAK!",
+  "description": "A reporting application for PAMA ARIA personnel to log and track daily activities and incidents across various operational areas like Front, Road, and Disposal. Features include image evidence upload, activity feeds, commenting, and data export.",
+  "requestFramePermissions": [
+    "camera"
+  ]
+}
