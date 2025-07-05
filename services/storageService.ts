@@ -1,27 +1,31 @@
 
 import { Report } from '../types.ts';
 
-const REPORTS_KEY = 'laporPakReports';
 const USER_KEY = 'laporPakUser';
-
 const SEVEN_DAYS_IN_MS = 7 * 24 * 60 * 60 * 1000;
 
+const API_URL = import.meta.env.VITE_API_URL || '';
+
 export const storageService = {
-  saveReports: (reports: Report[]): void => {
+  saveReports: async (reports: Report[]): Promise<void> => {
     try {
-      const reportsJson = JSON.stringify(reports);
-      localStorage.setItem(REPORTS_KEY, reportsJson);
+      await fetch(`${API_URL}/api/reports`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ reports }),
+      });
     } catch (error) {
-      console.error("Error saving reports to localStorage:", error);
+      console.error('Error saving reports to backend:', error);
     }
   },
 
-  loadReports: (): Report[] => {
+  loadReports: async (): Promise<Report[]> => {
     try {
-      const reportsJson = localStorage.getItem(REPORTS_KEY);
-      return reportsJson ? JSON.parse(reportsJson) : [];
+      const res = await fetch(`${API_URL}/api/reports`);
+      if (!res.ok) throw new Error('Failed to load reports');
+      return (await res.json()) as Report[];
     } catch (error) {
-      console.error("Error loading reports from localStorage:", error);
+      console.error('Error loading reports from backend:', error);
       return [];
     }
   },

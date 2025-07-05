@@ -20,14 +20,17 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
   const [isInitialized, setIsInitialized] = useState(false);
 
   useEffect(() => {
-    const loadedUser = storageService.loadUser();
-    if (loadedUser) {
-      setUser(loadedUser);
-    }
-    const loadedReports = storageService.loadReports();
-    const recentReports = storageService.cleanOldReports(loadedReports);
-    setReports(recentReports);
-    setIsInitialized(true);
+    const init = async () => {
+      const loadedUser = storageService.loadUser();
+      if (loadedUser) {
+        setUser(loadedUser);
+      }
+      const loadedReports = await storageService.loadReports();
+      const recentReports = storageService.cleanOldReports(loadedReports);
+      setReports(recentReports);
+      setIsInitialized(true);
+    };
+    init();
   }, []);
 
   useEffect(() => {
